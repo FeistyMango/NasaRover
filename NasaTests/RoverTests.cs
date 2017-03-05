@@ -21,10 +21,9 @@ namespace NasaAppTests
         [TestCase(false)]
         public void TestRoverDeployToOpenLocation(bool isPositionOpen)
         {
-            var position = isPositionOpen ? new Point(3, 1) : new Point(0, 0);
             var mockEnv = new Mock<IEnvironment>();
             mockEnv.Setup(p => p.IsPositionOpen(It.IsAny<Point>())).Returns(isPositionOpen);
-            mockEnv.Setup(p => p.SetPosition(It.IsAny<IMovable>(), It.IsAny<Point>())).Callback<IMovable, Point>((m, p) => m.Position = position);
+            mockEnv.Setup(p => p.SetPosition(It.IsAny<IMovable>(), It.IsAny<Point>())).Callback<IMovable, Point>((m, p) => m.Position = p);
 
             var rover = new Rover("3 1 N", mockEnv.Object);
 
