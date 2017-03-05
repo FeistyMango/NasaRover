@@ -12,10 +12,10 @@ namespace NasaApp
         protected IMovable[][] m_grid;
         public IMovable[][] Grid { get { return m_grid; } }
 
-        public Plateau(string gridBoundaries)
+        public Plateau(string gridBoundaries, IParser parser)
         {
             var points = gridBoundaries.Split(new char[] { ' ' });
-            var boundary = ParsingHelper.ParsePosition(gridBoundaries);
+            var boundary = parser.ParsePosition(gridBoundaries);
             m_grid = new IMovable[boundary.X][];
 
             for (var x = 0; x < Grid.Length; x++)

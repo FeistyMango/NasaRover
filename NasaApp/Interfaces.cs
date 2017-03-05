@@ -23,4 +23,12 @@ namespace NasaApp
         bool IsPositionOpen(Point coordinate);
         void SetPosition(IMovable movable, Point coordinate);
     }
+
+    public interface IParser
+    {
+        Point ParsePosition(string instruction);
+        bool IsMovable(string input);
+        bool IsMovementCommand(string input);
+        bool IsEnvironmentBoundary(string input);
+    }
 }

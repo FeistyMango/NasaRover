@@ -20,7 +20,8 @@ namespace NasaApp
             3 3 E
             MMRMMRMRRM";
 
-            var mars = new MarsSimulator(input);
+            var parser = new Parser();
+            var mars = new MarsSimulator(input, parser);
             mars.Simulate();
             Console.Read();
         }

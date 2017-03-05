@@ -15,7 +15,7 @@ namespace NasaApp
         public char Direction { get; set; }
         public IEnvironment Environment { get; set; }
 
-        public Rover(string startingInstruction, IEnvironment environment)
+        public Rover(string startingInstruction, IEnvironment environment, IParser parser)
         {
             Id = ++m_roverIdCounter;
             Environment = environment;
@@ -24,7 +24,7 @@ namespace NasaApp
 
             Direction = position[2][0];
 
-            var coordinate = ParsingHelper.ParsePosition(startingInstruction);
+            var coordinate = parser.ParsePosition(startingInstruction);
             if (Environment.IsPositionOpen(coordinate))
             {
                 Environment.SetPosition(this, coordinate);
@@ -52,7 +52,6 @@ namespace NasaApp
                     }
                     break;
             }
-            Console.WriteLine("Command: " + command + " --> " + this);
         }
 
         private Point CalculateNewPosition()

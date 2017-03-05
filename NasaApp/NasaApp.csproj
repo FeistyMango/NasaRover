@@ -49,7 +49,7 @@
   <ItemGroup>
     <Compile Include="Interfaces.cs" />
     <Compile Include="MarsSimulator.cs" />
-    <Compile Include="ParsingHelper.cs" />
+    <Compile Include="Parser.cs" />
     <Compile Include="Plateau.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
