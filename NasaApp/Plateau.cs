@@ -16,41 +16,26 @@ namespace NasaApp
         {
             var points = gridBoundaries.Split(new char[] { ' ' });
             var boundary = parser.ParsePosition(gridBoundaries);
-            m_grid = new IMovable[boundary.X][];
+            m_grid = new IMovable[boundary.Y][];
 
-            for (var x = 0; x < Grid.Length; x++)
+            for (var y = 0; y < Grid.Length; y++)
             {
-                m_grid[x] = new IMovable[boundary.Y];
+                m_grid[y] = new IMovable[boundary.X];
             }
-        }
-        private int ConvertY(int y) //FIX THIS
-        {
-            var newY = Grid.Length - y;
-            newY = Grid.Length == newY ? newY - 1 : newY;
-            newY = newY < 0 ? 0 : newY;
-            return newY;
-        }
-
-        private int ConvertX(int x)
-        {
-            var newX = x - 1;
-            newX = Grid.Length == newX ? newX - 1 : newX;
-            newX = newX < 0 ? 0 : newX;
-            return newX;
         }
 
         public bool IsPositionValid(Point coordinate)
         {
-            var y = ConvertY(coordinate.Y);
-            var x = ConvertX(coordinate.X);
+            var y = coordinate.X;
+            var x = coordinate.Y;
             return y >= 0 && y < Grid.Length
-                && x >= 0 && x < Grid[y].Length;
+                && x >= 0 && x < Grid.GetLength(0);
         }
 
         public bool IsPositionOpen(Point coordinate)
         {
-            var y = ConvertY(coordinate.Y);
-            var x = ConvertX(coordinate.X);
+            var y = coordinate.X;
+            var x = coordinate.Y;
             return IsPositionValid(coordinate) && Grid[y][x] == null;
         }
 
@@ -59,12 +44,12 @@ namespace NasaApp
             var isAvailable = IsPositionOpen(coordinate);
             if (isAvailable)
             {
-                var oldY = ConvertY(movable.Position.Y);
-                var oldX = ConvertX(movable.Position.X);
+                var oldY = movable.Position.X;
+                var oldX = movable.Position.Y;
                 m_grid[oldY][oldX] = null;
 
-                var newY = ConvertY(coordinate.Y);
-                var newX = ConvertX(coordinate.X);
+                var newY = coordinate.X;
+                var newX = coordinate.Y;
                 m_grid[newY][newX] = movable;
                 movable.Position = coordinate;
             }
