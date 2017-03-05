@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Interfaces.cs" />
     <Compile Include="MarsSimulator.cs" />
+    <Compile Include="MovableFactory.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Plateau.cs" />
     <Compile Include="Program.cs" />

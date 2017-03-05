@@ -14,17 +14,22 @@ namespace NasaApp
         public Point Position { get; set; }
         public char Direction { get; set; }
         public IEnvironment Environment { get; set; }
+        public IParser Parser { get; set; }
 
-        public Rover(string startingInstruction, IEnvironment environment, IParser parser)
+        public Rover(IEnvironment environment, IParser parser)
+        {
+            Environment = environment;
+            Parser = parser;
+        }
+
+        public IMovable Init(string startingInstruction)
         {
             Id = ++m_roverIdCounter;
-            Environment = environment;
-
             var position = startingInstruction.Split(new char[] { ' ' });
 
             Direction = position[2][0];
 
-            var coordinate = parser.ParsePosition(startingInstruction);
+            var coordinate = Parser.ParsePosition(startingInstruction);
             if (Environment.IsPositionOpen(coordinate))
             {
                 Environment.SetPosition(this, coordinate);
@@ -33,6 +38,8 @@ namespace NasaApp
             {
                 Environment.SetPosition(this, new Point(0, 0));
             }
+
+            return this;
         }
 
         public void Move(char command)

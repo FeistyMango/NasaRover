@@ -9,19 +9,26 @@ namespace NasaApp
 {
     public class Plateau : IEnvironment
     {
+        private IParser Parser { get; set; }
         protected IMovable[][] m_grid;
         public IMovable[][] Grid { get { return m_grid; } }
 
-        public Plateau(string gridBoundaries, IParser parser)
+        public Plateau(IParser parser)
+        {
+            Parser = parser;
+        }
+
+        public IEnvironment Init(string gridBoundaries)
         {
             var points = gridBoundaries.Split(new char[] { ' ' });
-            var boundary = parser.ParsePosition(gridBoundaries);
+            var boundary = Parser.ParsePosition(gridBoundaries);
             m_grid = new IMovable[boundary.Y][];
 
             for (var y = 0; y < Grid.Length; y++)
             {
                 m_grid[y] = new IMovable[boundary.X];
             }
+            return this;
         }
 
         public bool IsPositionValid(Point coordinate)

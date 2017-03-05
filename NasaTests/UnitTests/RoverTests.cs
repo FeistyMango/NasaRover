@@ -35,7 +35,7 @@ namespace NasaAppTests
             var parserMock = new Mock<IParser>();
             parserMock.Setup(p => p.ParsePosition(It.IsAny<string>())).Returns(new Point(3, 1));
             
-            var rover = new Rover("3 1 N", mockEnv.Object, parserMock.Object);
+            var rover = new Rover(mockEnv.Object, parserMock.Object).Init("3 1 N");
 
             var expectedX = isPositionOpen ? 3 : 0;
             var expectedY = isPositionOpen ? 1 : 0;
@@ -54,7 +54,7 @@ namespace NasaAppTests
             var parserMock = new Mock<IParser>();
             parserMock.Setup(p => p.ParsePosition(It.IsAny<string>())).Returns(new Point(3, 1));
 
-            var rover = new Rover("3 1 N", mockEnv.Object, parserMock.Object);
+            var rover = new Rover(mockEnv.Object, parserMock.Object).Init("3 1 N");
             rover.Move(command);
 
             Point expectedPosition = new Point(0, 0);

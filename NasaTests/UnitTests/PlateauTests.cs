@@ -23,7 +23,7 @@ namespace NasaAppTests
             var parserMock = new Mock<IParser>();
             parserMock.Setup(p => p.ParsePosition(It.IsAny<string>())).Returns(new Point(lengthX, lengthY));
 
-            var plateau = new Plateau(lengthX + " " + lengthY, parserMock.Object);
+            var plateau = new Plateau(parserMock.Object).Init(lengthX + " " + lengthY);
 
             Assert.AreEqual(lengthY, plateau.Grid.Length);
             Assert.AreEqual(lengthX, plateau.Grid[0].Length);
@@ -38,7 +38,7 @@ namespace NasaAppTests
             
             var movableMock = new Mock<IMovable>();
 
-            var plateau = new Plateau("5 5", parserMock.Object);
+            var plateau = new Plateau(parserMock.Object).Init("5 5");
             plateau.Grid[x][y] = isOccupiedOrInvalid ? movableMock.Object : null;
             
             var expectedPosition = new Point(x, y);
@@ -62,7 +62,7 @@ namespace NasaAppTests
             var parserMock = new Mock<IParser>();
             parserMock.Setup(p => p.ParsePosition(It.IsAny<string>())).Returns(new Point(5, 5));
 
-            var plateau = new Plateau("5 5", parserMock.Object);
+            var plateau = new Plateau(parserMock.Object).Init("5 5");
 
             var expectedPosition = new Point(x, y);
             if (isInvalid)
@@ -88,7 +88,7 @@ namespace NasaAppTests
             var movableMock = new Mock<IMovable>();
             var movableMocksStartingPosition = movableMock.Object.Position;
 
-            var plateau = new Plateau("5 5", parserMock.Object);
+            var plateau = new Plateau(parserMock.Object).Init("5 5");
 
             var expectedPosition = new Point(x, y);
             plateau.SetPosition(movableMock.Object, expectedPosition);

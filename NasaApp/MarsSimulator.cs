@@ -9,16 +9,22 @@ namespace NasaApp
     public class MarsSimulator
     {
         public IEnvironment AreaToExplore { get; set; }
-        public List<IMovable> Movables { get; set; }
         public IParser Parser { get; set; }
         public Stack<string> DataFromMissionControl { get; set; }
+        public IMovableFactory Factory { get; set; }
 
-        public MarsSimulator(string inputFromNASA, IParser parser)
+
+        public MarsSimulator(IEnvironment environment, IParser parser, IMovableFactory factory)
+        {
+            Parser = parser;
+            Factory = factory;
+            AreaToExplore = environment;
+        }
+
+        public MarsSimulator Init(string inputFromNASA)
         {
             var data = inputFromNASA.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Reverse();
             DataFromMissionControl = new Stack<string>(data);
-            Movables = new List<IMovable>();
-            Parser = parser;
 
             var gridBoundaries = DataFromMissionControl.Pop();
 
@@ -27,7 +33,8 @@ namespace NasaApp
                 throw new Exception("Error Invalid Environment Boundaries: " + gridBoundaries);
             }
 
-            AreaToExplore = new Plateau(gridBoundaries, Parser);
+            AreaToExplore.Init(gridBoundaries);
+            return this;
         }
 
         public string Simulate()
@@ -38,12 +45,8 @@ namespace NasaApp
                 var instruction = DataFromMissionControl.Pop();
                 if (Parser.IsMovable(instruction))
                 {
-                    var tmp = new Rover(instruction, AreaToExplore, Parser);
-                    //output.AppendLine(currMovable != null ? currMovable.ToString() : tmp.ToString());
+                    var tmp = Factory.Rover().Init(instruction);
                     currMovable = tmp;
-                    Movables.Add(currMovable);
-
-                    Console.WriteLine("Deploying Rover:" + tmp);
                 }
                 else if (Parser.IsMovementCommand(instruction) && currMovable != null)
                 {
@@ -53,7 +56,6 @@ namespace NasaApp
                         currMovable.Move(cmd);
                     }
                 }
-                Console.WriteLine(AreaToExplore);
             }
             return AreaToExplore.ToString();
         }

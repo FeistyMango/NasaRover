@@ -19,9 +19,11 @@ namespace NasaApp
             LMLMLMLMM
             3 3 E
             MMRMMRMRRM";
-
             var parser = new Parser();
-            var mars = new MarsSimulator(input, parser);
+            var plateau = new Plateau(parser);
+            var factory = new MovableFactory(plateau, parser);
+
+            var mars = new MarsSimulator(plateau, parser, factory).Init(input);
             mars.Simulate();
             Console.Read();
         }
