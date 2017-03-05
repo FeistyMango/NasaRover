@@ -30,19 +30,42 @@ namespace NasaApp
             }
             return this;
         }
+        private int ConvertY(int y)
+        {
+            if (y > Grid.Length)
+            {
+                return -1;
+            }
+            var newY = Grid.Length - y;
+            newY = Grid.Length == newY ? newY - 1 : newY;
+            newY = newY < 0 ? 0 : newY;
+            return newY;
+        }
+
+        private int ConvertX(int x)
+        {
+            if (x > Grid.GetLength(0))
+            {
+                return -1;
+            }
+            var newX = x - 1;
+            newX = Grid.Length == newX ? newX - 1 : newX;
+            newX = newX < 0 ? 0 : newX;
+            return newX;
+        }
 
         public bool IsPositionValid(Point coordinate)
         {
-            var y = coordinate.X;
-            var x = coordinate.Y;
+            var y = ConvertY(coordinate.Y);
+            var x = ConvertX(coordinate.X);
             return y >= 0 && y < Grid.Length
-                && x >= 0 && x < Grid.GetLength(0);
+                && x >= 0 && x < Grid[y].Length;
         }
 
         public bool IsPositionOpen(Point coordinate)
         {
-            var y = coordinate.X;
-            var x = coordinate.Y;
+            var y = ConvertY(coordinate.Y);
+            var x = ConvertX(coordinate.X);
             return IsPositionValid(coordinate) && Grid[y][x] == null;
         }
 
@@ -51,12 +74,12 @@ namespace NasaApp
             var isAvailable = IsPositionOpen(coordinate);
             if (isAvailable)
             {
-                var oldY = movable.Position.X;
-                var oldX = movable.Position.Y;
+                var oldY = ConvertY(movable.Position.Y);
+                var oldX = ConvertX(movable.Position.X);
                 m_grid[oldY][oldX] = null;
 
-                var newY = coordinate.X;
-                var newX = coordinate.Y;
+                var newY = ConvertY(coordinate.Y);
+                var newX = ConvertX(coordinate.X);
                 m_grid[newY][newX] = movable;
                 movable.Position = coordinate;
             }

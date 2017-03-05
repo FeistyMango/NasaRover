@@ -75,12 +75,12 @@ namespace NasaAppTests
             }
         }
 
-        [TestCase(3, 2, false)]
-        [TestCase(4, 2, false)]
-        [TestCase(5, 7, true)]
-        [TestCase(9, 4, true)]
-        [TestCase(9, 9, true)]
-        public void TestSetPosition(int x, int y, bool isInvalid)
+        [TestCase(3, 2, 2, 3, false)]
+        [TestCase(4, 2, 3, 3, false)]
+        [TestCase(5, 7, 0, 0, true)]
+        [TestCase(9, 4, 0, 0, true)]
+        [TestCase(9, 9, 0, 0, true)]
+        public void TestSetPosition(int coordinateX, int coordinateY, int expectedIndiceX, int expectedIndiceY, bool isInvalid)
         {
              var parserMock = new Mock<IParser>();
             parserMock.Setup(p => p.ParsePosition(It.IsAny<string>())).Returns(new Point(5, 5));
@@ -90,7 +90,7 @@ namespace NasaAppTests
 
             var plateau = new Plateau(parserMock.Object).Init("5 5");
 
-            var expectedPosition = new Point(x, y);
+            var expectedPosition = new Point(coordinateX, coordinateY);
             plateau.SetPosition(movableMock.Object, expectedPosition);
 
             if (isInvalid)
@@ -105,7 +105,7 @@ namespace NasaAppTests
             }
             else
             {
-                var movable = plateau.Grid[expectedPosition.X][expectedPosition.Y];
+                var movable = plateau.Grid[expectedIndiceY][expectedIndiceX];
                 Assert.IsNotNull(movable);
             }
         }
