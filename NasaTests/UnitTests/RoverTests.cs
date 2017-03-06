@@ -31,7 +31,8 @@ namespace NasaAppTests
         public void TestRoverDeploy(bool isPositionOpen)
         {
             var mockEnv = SetupMockEnv();
-            mockEnv.Setup(p => p.IsPositionOpen(It.IsAny<Point>())).Returns(isPositionOpen);
+            mockEnv.Setup(p => p.IsPositionOpen(It.Is<Point>(q => q.X == 3 && q.Y == 1))).Returns(isPositionOpen);
+            mockEnv.Setup(p => p.IsPositionOpen(It.Is<Point>(q => q.X == 1 && q.Y == 1))).Returns(true);
 
             var parserMock = new Mock<IParser>();
             parserMock.Setup(p => p.ParsePosition(It.IsAny<string>())).Returns(new Point(3, 1));

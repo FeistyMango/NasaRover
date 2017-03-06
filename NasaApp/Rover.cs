@@ -108,7 +108,7 @@ namespace NasaApp
                     }
                     break;
                 default:
-                    Logger.Error("Rover " + Id + " - Unrecognized Command: " + command);
+                    Logger.Error("Rover " + Id + ": Unrecognized Command '" + command + "'");
                     break;
             }
         }

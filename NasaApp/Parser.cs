@@ -20,7 +20,7 @@ namespace NasaApp
         {
             Logger = logger;
             m_isMovableRegex = new Regex(@"^\d+ \d+ [NEWS]$");
-            m_isMovementCommandRegex = new Regex("^[LRM]+$");
+            m_isMovementCommandRegex = new Regex("^[LRM]+$"); //^(?=([LRM]+)).*$
             m_isEnvironmentBoundaryRegex = new Regex(@"^\d+ \d+$");
         }
 
