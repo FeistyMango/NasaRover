@@ -28,20 +28,34 @@ namespace NasaApp
         public IMovable Init(string startingInstruction)
         {
             Id = ++m_roverIdCounter;
-            var position = startingInstruction.Split(new char[] { ' ' });
+            Point coordinate = new Point(0, 0);
+            var error = false;
 
-            Direction = position[2][0];
-
-            var coordinate = Parser.ParsePosition(startingInstruction);
-            if (Environment.IsPositionOpen(coordinate))
+            try
             {
-                Environment.SetPosition(this, coordinate);
-                Log.Information("Deploying Rover: " + this.ToString());
+                var position = startingInstruction.Split(new char[] { ' ' });
+                Direction = position[2][0];
+                coordinate = Parser.ParsePosition(startingInstruction);
             }
-            else
+            catch
             {
+                error = true;
                 Environment.SetPosition(this, new Point(0, 0));
-                Log.Information("Deploying Rover: Space Occupied, Using Back Up at " + this.ToString());
+                Logger.Error("Deploying Rover ID: Error Parsing Coordinates {coordinate}, Using Contigency Location at " + this.ToString(), coordinate);
+            }
+
+            if (!error)
+            {
+                if (Environment.IsPositionOpen(coordinate))
+                {
+                    Environment.SetPosition(this, coordinate);
+                    Logger.Information("Deploying Rover: " + this.ToString());
+                }
+                else
+                {
+                    Environment.SetPosition(this, new Point(0, 0));
+                    Logger.Warning("Deploying Rover ID: Coorindates Occupied/Invalid {coordinate}, Using Contigency Location at " + this.ToString(), coordinate);
+                }
             }
 
             return this;

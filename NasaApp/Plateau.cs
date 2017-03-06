@@ -88,6 +88,7 @@ namespace NasaApp
         public override string ToString()
         {
             var sb = new StringBuilder();
+            sb.AppendLine(new String('-', 5 * Grid.GetLength(0) + 1));
             for (var y = 0; y < Grid.Length; y++)
             {
                 var stuff = Grid[y].Select(p => p != null ? (p.Id + "(" + p.Direction + ")") : " ").Select(p => p.PadLeft(4));
@@ -97,7 +98,7 @@ namespace NasaApp
 
                 sb.AppendLine(new String('-', 5 * Grid.GetLength(0) + 1));
             }
-            return sb.ToString();
+            return "\n" + sb.ToString();
         }
     }
 }

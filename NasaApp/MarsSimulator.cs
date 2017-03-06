@@ -34,7 +34,7 @@ namespace NasaApp
             if (!Parser.IsEnvironmentBoundary(gridBoundaries))
             {
                 var error = "Error Invalid Environment Boundaries: " + gridBoundaries;
-                Log.Fatal(error);
+                Logger.Fatal(error);
                 throw new Exception(error);
             }
 
