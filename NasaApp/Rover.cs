@@ -82,6 +82,10 @@ namespace NasaApp
                     {
                         Environment.SetPosition(this, newPosition);
                     }
+                    else
+                    {
+                        Logger.Information("Rover: Movement obstructued at {newPosition}, " + this.ToString(), newPosition);
+                    }
                     break;
                 default:
                     Logger.Error("Rover " + Id + " - Unrecognized Command: " + command);
