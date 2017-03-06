@@ -14,20 +14,6 @@ namespace NasaTests.IntegrationTests
     [TestFixture]
     public class MarsSimulatorTests
     {
-        //public struct TestData 
-        //{
-        //    public string Input;
-        //    public Point[] ExpectedCoordinates;
-        //    public bool HasError;
-
-        //    public TestCase (string input, Point[] expectedCoordinates, bool hasError)
-        //    {
-        //        Input = input;
-        //        ExpectedCoordinates = expectedCoordinates;
-        //        HasError = hasError;
-        //    }
-        //}
-
         public static IEnumerable<TestCaseData> SetupData()
         {
             yield return new TestCaseData(@"
