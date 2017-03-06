@@ -106,7 +106,9 @@ namespace NasaTests.IntegrationTests
             var mars = new MarsSimulator(plateau, parser, factory, loggerMock.Object).Init(input);
             mars.Simulate();
 
+            Assert.AreEqual(1, plateau.Grid[4][0].Id);
             Assert.AreNotEqual(2, plateau.Grid[4][0].Id);
+            Assert.AreEqual(3, plateau.Grid[4][1].Id);
             loggerMock.Verify(p => p.Error(It.IsAny<string>()), Times.Exactly(2)); //bad deploy, aborted movement cmd
         }
 
