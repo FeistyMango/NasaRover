@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using Serilog;
 
 namespace NasaApp
 {
@@ -15,11 +16,13 @@ namespace NasaApp
         public char Direction { get; set; }
         public IEnvironment Environment { get; set; }
         public IParser Parser { get; set; }
+        public ILogger Logger { get; set; }
 
-        public Rover(IEnvironment environment, IParser parser)
+        public Rover(IEnvironment environment, IParser parser, ILogger logger)
         {
             Environment = environment;
             Parser = parser;
+            Logger = logger;
         }
 
         public IMovable Init(string startingInstruction)
@@ -33,15 +36,23 @@ namespace NasaApp
             if (Environment.IsPositionOpen(coordinate))
             {
                 Environment.SetPosition(this, coordinate);
+                Log.Information("Deploying Rover: " + this.ToString());
             }
             else
             {
                 Environment.SetPosition(this, new Point(0, 0));
+                Log.Information("Deploying Rover: Space Occupied, Using Back Up at " + this.ToString());
             }
 
             return this;
         }
 
+        /// <summary>
+        /// Move Rover.
+        /// Movement Command: Can only move if position is available
+        /// Turn Command: Will always successfully turn
+        /// </summary>
+        /// <param name="command"></param>
         public void Move(char command)
         {
             Point nextPosition;
@@ -57,6 +68,9 @@ namespace NasaApp
                     {
                         Environment.SetPosition(this, newPosition);
                     }
+                    break;
+                default:
+                    Logger.Error("Rover " + Id + " - Unrecognized Command: " + command);
                     break;
             }
         }

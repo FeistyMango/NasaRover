@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,13 +13,15 @@ namespace NasaApp
         public IParser Parser { get; set; }
         public Stack<string> DataFromMissionControl { get; set; }
         public IMovableFactory Factory { get; set; }
+        public ILogger Logger { get; set; }
 
 
-        public MarsSimulator(IEnvironment environment, IParser parser, IMovableFactory factory)
+        public MarsSimulator(IEnvironment environment, IParser parser, IMovableFactory factory, ILogger logger)
         {
             Parser = parser;
             Factory = factory;
             AreaToExplore = environment;
+            Logger = logger;
         }
 
         public MarsSimulator Init(string inputFromNASA)
@@ -30,7 +33,9 @@ namespace NasaApp
 
             if (!Parser.IsEnvironmentBoundary(gridBoundaries))
             {
-                throw new Exception("Error Invalid Environment Boundaries: " + gridBoundaries);
+                var error = "Error Invalid Environment Boundaries: " + gridBoundaries;
+                Log.Fatal(error);
+                throw new Exception(error);
             }
 
             AreaToExplore.Init(gridBoundaries);
@@ -47,6 +52,8 @@ namespace NasaApp
                 {
                     var tmp = Factory.Rover().Init(instruction);
                     currMovable = tmp;
+                    Logger.Debug("Deploying Rover: " + tmp.ToString());
+                    Logger.Debug(AreaToExplore.ToString());
                 }
                 else if (Parser.IsMovementCommand(instruction) && currMovable != null)
                 {
@@ -54,7 +61,12 @@ namespace NasaApp
                     foreach (var cmd in commands)
                     {
                         currMovable.Move(cmd);
+                        Logger.Debug(AreaToExplore.ToString());
                     }
+                }
+                else
+                {
+                    Logger.Error("Unrecognized Instruction: " + instruction);
                 }
             }
             return AreaToExplore.ToString();

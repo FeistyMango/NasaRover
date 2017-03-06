@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Text.RegularExpressions;
+using Serilog;
 
 namespace NasaApp
 {
@@ -13,12 +14,14 @@ namespace NasaApp
         private static Regex m_isMovableRegex;
         private static Regex m_isMovementCommandRegex;
         private static Regex m_isEnvironmentBoundaryRegex;
-        
-        static Parser()
+        public ILogger Logger { get; set; }
+
+        public Parser(ILogger logger)
         {
-            m_isMovableRegex = new Regex(@"^\d \d [NEWS]$");
+            Logger = logger;
+            m_isMovableRegex = new Regex(@"^\d+ \d+ [NEWS]$");
             m_isMovementCommandRegex = new Regex("^[LRM]+$");
-            m_isEnvironmentBoundaryRegex = new Regex(@"^\d \d$");
+            m_isEnvironmentBoundaryRegex = new Regex(@"^\d+ \d+$");
         }
 
         public Point ParsePosition(string instruction)
@@ -29,7 +32,9 @@ namespace NasaApp
             {
                 return new Point(x, y);
             }
-            throw new Exception("Error Building Coordinate: " + instruction);
+            var error = "Error Building Coordinate: " + instruction;
+
+            throw new Exception(error);
         }
 
         public bool IsMovable(string input)

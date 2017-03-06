@@ -94,7 +94,8 @@ namespace NasaApp
                 var row = String.Join("|", stuff);
                 row = "|" + row + "|";
                 sb.AppendLine(row);
-                sb.AppendLine("---------------------------");
+
+                sb.AppendLine(new String('-', 5 * Grid.GetLength(0) + 1));
             }
             return sb.ToString();
         }
