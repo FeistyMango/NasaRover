@@ -18,7 +18,7 @@ namespace NasaApp
         IEnvironment Environment { get; set; }
         Point Position { get; set; }
         char Direction { get; set; }
-        void Move(char command);
+        void Move(string instruction);
         IMovable Init(int id, string startingInstruction);
     }
 

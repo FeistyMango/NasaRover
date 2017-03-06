@@ -66,14 +66,9 @@ namespace NasaApp
                         currMovable = null; //ensure that subsequent movement commands are aborted
                     }
                 }
-                else if (Parser.IsMovementCommand(instruction) && currMovable != null)
+                else if (currMovable != null)
                 {
-                    var commands = instruction.ToCharArray();
-                    foreach (var cmd in commands)
-                    {
-                        currMovable.Move(cmd);
-                        Logger.Debug(AreaToExplore.ToString());
-                    }
+                    currMovable.Move(instruction);
                 }
                 else
                 {

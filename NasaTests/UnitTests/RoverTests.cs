@@ -49,10 +49,10 @@ namespace NasaAppTests
             Assert.AreEqual('N', rover.Direction);
         }
 
-        [TestCase('L')]
-        [TestCase('R')]
-        [TestCase('M')]
-        public void TestRoverSuccessfulMove(char command)
+        [TestCase("L")]
+        [TestCase("R")]
+        [TestCase("M")]
+        public void TestRoverSuccessfulMove(string command)
         {
             var mockEnv = SetupMockEnv();
             var parserMock = new Mock<IParser>();
@@ -67,15 +67,15 @@ namespace NasaAppTests
             char expectedDirection = ' ';
             switch(command)
             {
-                case 'L':
+                case "L":
                     expectedPosition = new Point(3, 1);
                     expectedDirection = 'W';
                     break;
-                case 'R':
+                case "R":
                     expectedPosition = new Point(3, 1);
                     expectedDirection = 'E';
                     break;
-                case 'M':
+                case "M":
                     expectedPosition = new Point(3, 2);
                     expectedDirection = 'N';
                     break;

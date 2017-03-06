@@ -122,7 +122,7 @@ namespace NasaTests.IntegrationTests
 
             var movable = mars.AreaToExplore.Grid[4][0];
             Assert.IsNotNull(movable);
-            Assert.AreEqual('N', movable.Direction);
+            Assert.AreEqual('E', movable.Direction);
             loggerMock.Verify(p => p.Error(It.IsAny<string>()), Times.Exactly(1));
         }
     }

@@ -87,7 +87,16 @@ namespace NasaApp
         /// Turn Command: Will always successfully turn
         /// </summary>
         /// <param name="command"></param>
-        public void Move(char command)
+        public void Move(string instruction)
+        {
+            foreach (var cmd in instruction)
+            {
+                ProcessMovement(cmd);
+                Logger.Debug(Environment.ToString());
+            }
+        }
+
+        protected virtual void ProcessMovement(char command)
         {
             Point nextPosition;
             switch (command)
