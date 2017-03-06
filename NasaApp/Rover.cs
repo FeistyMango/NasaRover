@@ -10,7 +10,6 @@ namespace NasaApp
 {
     public class Rover : IMovable
     {
-        private static int m_roverIdCounter = 0;
         public int Id { get; set; }
         public Point Position { get; set; }
         public char Direction { get; set; }
@@ -25,12 +24,15 @@ namespace NasaApp
             Logger = logger;
         }
 
-        public IMovable Init(string startingInstruction)
+        public IMovable Init(int id, string startingInstruction)
         {
-            Id = ++m_roverIdCounter;
-            Point coordinate = new Point(0, 0);
-            var error = false;
+            Id = id;
+            Position = new Point(-1, -1);
 
+            Point coordinate = new Point(0, 0);
+            var contingencyCoordiante = new Point(0, 0);
+            var errorParsingCoordinate = false;
+            var aborting = false;
             try
             {
                 var position = startingInstruction.Split(new char[] { ' ' });
@@ -39,23 +41,41 @@ namespace NasaApp
             }
             catch
             {
-                error = true;
-                Environment.SetPosition(this, new Point(0, 0));
-                Logger.Error("Deploying Rover ID: Error Parsing Coordinates {coordinate}, Using Contigency Location at " + this.ToString(), coordinate);
+                errorParsingCoordinate = true;
+                if (Environment.IsPositionOpen(contingencyCoordiante))
+                {
+                    Environment.SetPosition(this, contingencyCoordiante);
+                    Logger.Warning("Deploying Rover: Error Parsing Coordinates {coordinate}, Using Contigency Location. " + this.ToString(), coordinate);
+                }
+                else
+                {
+                    aborting = true;
+                }
             }
 
-            if (!error)
+            if (!errorParsingCoordinate)
             {
                 if (Environment.IsPositionOpen(coordinate))
                 {
                     Environment.SetPosition(this, coordinate);
                     Logger.Information("Deploying Rover: " + this.ToString());
                 }
+                else if (Environment.IsPositionOpen(contingencyCoordiante))
+                {
+                    Environment.SetPosition(this, contingencyCoordiante);
+                    Logger.Warning("Deploying Rover: Coorindates Occupied/Invalid {coordinate}, Using Contigency Location. " + this.ToString(), coordinate);
+                }
                 else
                 {
-                    Environment.SetPosition(this, new Point(0, 0));
-                    Logger.Warning("Deploying Rover ID: Coorindates Occupied/Invalid {coordinate}, Using Contigency Location at " + this.ToString(), coordinate);
+                    aborting = true;
                 }
+            }
+
+            if (aborting)
+            {
+                var error = "Deploying Rover: Could not be deployed to Contingency Location; Aborting!";
+                Logger.Error(error);
+                throw new Exception(error);
             }
 
             return this;

@@ -38,7 +38,7 @@ namespace NasaAppTests
 
             var loggerMock = new Mock<ILogger>();
             
-            var rover = new Rover(mockEnv.Object, parserMock.Object, loggerMock.Object).Init("3 1 N");
+            var rover = new Rover(mockEnv.Object, parserMock.Object, loggerMock.Object).Init(1, "3 1 N");
 
             var expectedX = isPositionOpen ? 3 : 0;
             var expectedY = isPositionOpen ? 1 : 0;
@@ -59,7 +59,7 @@ namespace NasaAppTests
             
             var loggerMock = new Mock<ILogger>();
 
-            var rover = new Rover(mockEnv.Object, parserMock.Object, loggerMock.Object).Init("3 1 N");
+            var rover = new Rover(mockEnv.Object, parserMock.Object, loggerMock.Object).Init(1, "3 1 N");
             rover.Move(command);
 
             Point expectedPosition = new Point(0, 0);

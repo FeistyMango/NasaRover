@@ -76,7 +76,10 @@ namespace NasaApp
             {
                 var oldY = ConvertY(movable.Position.Y);
                 var oldX = ConvertX(movable.Position.X);
-                m_grid[oldY][oldX] = null;
+                if (IsPositionValid(movable.Position))
+                {
+                    m_grid[oldY][oldX] = null;
+                }
 
                 var newY = ConvertY(coordinate.Y);
                 var newX = ConvertX(coordinate.X);

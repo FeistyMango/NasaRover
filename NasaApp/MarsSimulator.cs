@@ -14,7 +14,7 @@ namespace NasaApp
         public Stack<string> DataFromMissionControl { get; set; }
         public IMovableFactory Factory { get; set; }
         public ILogger Logger { get; set; }
-
+        public List<IMovable> Movables { get; set; }
 
         public MarsSimulator(IEnvironment environment, IParser parser, IMovableFactory factory, ILogger logger)
         {
@@ -26,6 +26,8 @@ namespace NasaApp
 
         public MarsSimulator Init(string inputFromNASA)
         {
+            Movables = new List<IMovable>();
+
             var data = inputFromNASA.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Reverse();
             DataFromMissionControl = new Stack<string>(data);
 
@@ -45,15 +47,24 @@ namespace NasaApp
         public string Simulate()
         {
             IMovable currMovable = null;
+            var movableIdIncrementer = 1;
             while (DataFromMissionControl.Any())
             {
                 var instruction = DataFromMissionControl.Pop();
                 if (Parser.IsMovable(instruction))
                 {
-                    var tmp = Factory.Rover().Init(instruction);
-                    currMovable = tmp;
-                    Logger.Debug("Deploying Rover: " + tmp.ToString());
-                    Logger.Debug(AreaToExplore.ToString());
+                    try
+                    {
+                        var tmp = Factory.Rover().Init(movableIdIncrementer++, instruction);
+                        Movables.Add(tmp);
+                        currMovable = tmp;
+                        Logger.Debug("Deploying Rover: " + tmp.ToString());
+                        Logger.Debug(AreaToExplore.ToString());
+                    }
+                    catch
+                    {
+                        currMovable = null; //ensure that subsequent movement commands are aborted
+                    }
                 }
                 else if (Parser.IsMovementCommand(instruction) && currMovable != null)
                 {
