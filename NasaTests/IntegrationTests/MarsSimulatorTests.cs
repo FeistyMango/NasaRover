@@ -103,5 +103,27 @@ namespace NasaTests.IntegrationTests
             Assert.AreNotEqual(2, plateau.Grid[4][0].Id);
             loggerMock.Verify(p => p.Error(It.IsAny<string>()), Times.Exactly(2)); //bad deploy, aborted movement cmd
         }
+
+        [TestCase(@"
+            5 5
+            1 1 N
+            LLMLLxR")]
+        public void TestSimulateInvalidMovementCommandErrorHandled(string input)
+        {
+            var loggerMock = new Mock<ILogger>();
+            var msgLogged = "";
+            loggerMock.Setup(p => p.Error(It.IsAny<string>()));
+
+            var parser = new Parser(loggerMock.Object);
+            var plateau = new Plateau(parser);
+            var factory = new MovableFactory(plateau, parser, loggerMock.Object);
+            var mars = new MarsSimulator(plateau, parser, factory, loggerMock.Object).Init(input);
+            mars.Simulate();
+
+            var movable = mars.AreaToExplore.Grid[4][0];
+            Assert.IsNotNull(movable);
+            Assert.AreEqual('N', movable.Direction);
+            loggerMock.Verify(p => p.Error(It.IsAny<string>()), Times.Exactly(1));
+        }
     }
 }
