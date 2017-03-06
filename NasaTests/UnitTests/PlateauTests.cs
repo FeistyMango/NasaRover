@@ -31,7 +31,7 @@ namespace NasaAppTests
 
         [TestCase(3, 2, true)]
         [TestCase(4, 2, false)]
-        public void TestIsPositionOpen(int x, int y, bool isOccupiedOrInvalid)
+        public void TestIsPositionOpen(int x, int y, bool isPositionOccupied)
         {
             var parserMock = new Mock<IParser>();
             parserMock.Setup(p => p.ParsePosition(It.IsAny<string>())).Returns(new Point(5, 5));
@@ -39,10 +39,10 @@ namespace NasaAppTests
             var movableMock = new Mock<IMovable>();
 
             var plateau = new Plateau(parserMock.Object).Init("5 5");
-            plateau.Grid[x][y] = isOccupiedOrInvalid ? movableMock.Object : null;
+            plateau.Grid[x][y] = isPositionOccupied ? movableMock.Object : null;
             
             var expectedPosition = new Point(x, y);
-            if (isOccupiedOrInvalid)
+            if (isPositionOccupied)
             {
                 Assert.IsFalse(plateau.IsPositionOpen(expectedPosition));
             }

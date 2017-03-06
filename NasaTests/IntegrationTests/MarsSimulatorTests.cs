@@ -76,6 +76,30 @@ namespace NasaTests.IntegrationTests
                 Assert.AreEqual(expectedDirections[i], movable.Direction, "Rover " + (i + 1) + " facing wrong direction");
             }
         }
+        
+        [TestCase(@"
+            5 5
+            2 2 N
+            LLLLLL
+            2 2 E
+            MMRMMRMRRM
+            2 1 E
+            RRRRR")]
+        public void TestSimulateContingencyDeploymentSuccessOnRover2(string input)
+        {
+            var loggerMock = new Mock<ILogger>();
+            loggerMock.Setup(p => p.Warning(It.IsAny<string>()));
+
+            var parser = new Parser(loggerMock.Object);
+            var plateau = new Plateau(parser);
+            var factory = new MovableFactory(plateau, parser, loggerMock.Object);
+            var mars = new MarsSimulator(plateau, parser, factory, loggerMock.Object).Init(input);
+            mars.Simulate();
+
+            Assert.AreEqual(2, plateau.Grid[4][0].Id);
+            loggerMock.Verify(p => p.Warning<Point>(It.IsAny<string>(), It.IsAny<Point>())); //bad deploy, aborted movement cmd
+        }
+
 
         [TestCase(@"
             5 5
@@ -88,11 +112,7 @@ namespace NasaTests.IntegrationTests
         public void TestSimulateContingencyDeploymentErrorOnRover2(string input)
         {
             var loggerMock = new Mock<ILogger>();
-            var msgLogged = "";
-            loggerMock.Setup(p => p.Error(It.IsAny<string>()))
-                            .Callback<string>(msg => {
-                                msgLogged = msg;
-                            });
+            loggerMock.Setup(p => p.Error(It.IsAny<string>()));
 
             var parser = new Parser(loggerMock.Object);
             var plateau = new Plateau(parser);
@@ -111,7 +131,6 @@ namespace NasaTests.IntegrationTests
         public void TestSimulateInvalidMovementCommandErrorHandled(string input)
         {
             var loggerMock = new Mock<ILogger>();
-            var msgLogged = "";
             loggerMock.Setup(p => p.Error(It.IsAny<string>()));
 
             var parser = new Parser(loggerMock.Object);
